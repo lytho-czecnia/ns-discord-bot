@@ -92,6 +92,11 @@ bot = api.nation(ns_username,ns_password)
 
 del tokens
 
+with open("validusers.json") as json_file:
+    users: dict[str,list[int]] = json.load(json_file)
+
+valid_roles = users['roles']
+authenticated_users = users['users']
 
 send_message = lambda message, channel: channel.send(message)
 async def send_hi (author, channel ):
@@ -100,8 +105,6 @@ async def send_hi (author, channel ):
 mirror = lambda contents, channel: send_message(contents,channel)
 
 async def post_to_rmb(message: discord.message.Message, author:discord.Member):
-    valid_roles = [1487594647290249417,1487570978191179786]
-    authenticated_users = []#690167724667961373]
     is_message_allowed = any(author.get_role(valid_role) != None and valid_role == author.get_role(valid_role).id for valid_role in valid_roles)
     if author.id in authenticated_users:
         bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post"))
