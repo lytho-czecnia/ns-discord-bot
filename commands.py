@@ -104,7 +104,7 @@ async def post_to_rmb(message: discord.message.Message, author:discord.Member):
     authenticated_users = []#690167724667961373]
     is_message_allowed = any(author.get_role(valid_role) != None and valid_role == author.get_role(valid_role).id for valid_role in valid_roles)
     if author.id in authenticated_users:
-        bot.send_rmb("nisatian_testing_range",message.content)
+        bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post"))
         await message.reply("Message sent without approval (user was in list of authenticated users)!")
     elif is_message_allowed:
         loop = asyncio.get_running_loop()
