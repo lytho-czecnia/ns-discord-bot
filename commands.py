@@ -107,7 +107,7 @@ mirror = lambda contents, channel: send_message(contents,channel)
 async def post_to_rmb(message: discord.message.Message, author:discord.Member):
     is_message_allowed = any(author.get_role(valid_role) != None and valid_role == author.get_role(valid_role).id for valid_role in valid_roles)
     if author.id in authenticated_users:
-        bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post"))
+        bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post").replace("’","'"))
         await message.reply("Message sent without approval (user was in list of authenticated users)!")
     elif is_message_allowed:
         loop = asyncio.get_running_loop()
@@ -119,7 +119,7 @@ async def post_to_rmb(message: discord.message.Message, author:discord.Member):
 
 async def accepted_message(message: discord.message.Message):
     await message.reply("Message has been approved. Sending!")
-    bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post"))
+    bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post").replace("’","'"))
 
 async def denied_message(message: discord.message.Message):
     await message.reply("Message has been denied. Sorry!")
