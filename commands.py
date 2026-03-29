@@ -92,7 +92,7 @@ bot = api.nation(ns_username,ns_password)
 
 del tokens
 
-with open("validusers.json") as json_file:
+with open("valid_users.json") as json_file:
     users: dict[str,list[int]] = json.load(json_file)
 
 valid_roles = users['roles']
