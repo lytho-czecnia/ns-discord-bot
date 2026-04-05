@@ -72,7 +72,7 @@ class judgeButton:
 def start_gui(loop, msg, auth):
     global verify_window, message_box, accept, deny
     try:
-        message_box.add_message(msg,auth)
+        message_box.add_message(msg,auth) # type:ignore
     except:
         verify_window = tk.Tk()
         message_box = Messages(verify_window)
@@ -100,12 +100,30 @@ authenticated_users = users['users']
 
 send_message = lambda message, channel: channel.send(message)
 async def send_hi (author, channel ):
-    print(author)
-    send_message(f"Hello {author}!", channel)
-mirror = lambda contents, channel: send_message(contents,channel)
+    '''Sends the word "hi", followed by the message'''
+    await send_message(f"Hello {author}!", channel)
+
+async def help(message: discord.message.Message):
+    '''Provides documentation and example usage of all functions'''
+    out = ''
+    if message.content == "!help":
+        out = '# Full list of commands:\n - '+'\n - '.join(command_prefixes) + '\n\nUse `!help (command)` to find out more about a specific command!'
+    elif (message.content.removeprefix("!help ") in command_prefixes):
+        out += f" # HELP: {message.content.removeprefix("!help !")}\n"
+        out += commands[command_prefixes.index(message.content.removeprefix("!help "))].__doc__
+    elif ("!"+message.content.removeprefix("!help ") in command_prefixes):
+        out += f" # HELP: {message.content.removeprefix("!help ")}\n"
+        out += commands[command_prefixes.index("!" + message.content.removeprefix("!help "))].__doc__
+    if out != '':
+        await send_message(out,message.channel)
+
+async def mirror (contents, channel): 
+    '''Sends the contents of the message which was sent in'''
+    await send_message(contents,channel)
 
 async def post_to_rmb(message: discord.message.Message, author:discord.Member):
-    is_message_allowed = any(author.get_role(valid_role) != None and valid_role == author.get_role(valid_role).id for valid_role in valid_roles)
+    '''Attempts to post using the bot account linked to this discord bot.'''
+    is_message_allowed = any(author.get_role(valid_role) != None and valid_role == author.get_role(valid_role).id for valid_role in valid_roles) #type: ignore
     if author.id in authenticated_users:
         bot.send_rmb("nisatian_testing_range",message.content.removeprefix("!post").replace("’","'"))
         await message.reply("Message sent without approval (user was in list of authenticated users)!")
@@ -126,5 +144,5 @@ async def denied_message(message: discord.message.Message):
 
 
 
-commands = [send_hi, mirror,post_to_rmb]
-command_prefixes = ["!hi","!mirror","!post"]
+commands = [help,send_hi, mirror,post_to_rmb]
+command_prefixes = ["!help","!hi","!mirror","!post"]

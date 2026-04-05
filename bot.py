@@ -15,7 +15,7 @@ del tokens
 
 intents = discord.Intents.default()
 intents.message_content = True
-client = discord.Client(command_prefix="!", intents=intents)
+client = discord.Client(command_prefix="!", intents=intents) #type: ignore
 
 
 @client.event
